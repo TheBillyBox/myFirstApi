@@ -10,6 +10,7 @@ app.get('/', myFirstController.helloWorld)
 app.get('/alumnes', myFirstController.alumnes)
 
 app.use('/api/v1/user', require('./routes/userRoutes'))
+app.use('/api/v1/film', require('./routes/filmRoutes'))
 app.listen(process.env.PORT || 3000, () =>{
     console.log('My Frist API running!')
 })
