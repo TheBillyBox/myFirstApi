@@ -26,3 +26,18 @@ module.exports.save = async (objToSave) => {
   }
   return responseObj;
 };
+
+module.exports.findOneAndUpdate = async (data) => {
+  let responseObj = { status: false };
+  try {
+    const doc = await data.model.findOneAndUpdate(data.findQuery, data.updateQuery, { projection: data.projection, new: true});
+    responseObj = {
+      result: doc,
+      status: true
+    };
+  } catch (err) {
+    responseObj.error = err;
+    console.log('ERROR-crudRepository-findOneAndUpdate', err);
+  }
+  return responseObj;
+};

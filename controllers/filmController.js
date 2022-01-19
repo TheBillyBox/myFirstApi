@@ -1,3 +1,4 @@
+const { response } = require('express');
 const filmService = require('../services/filmService')
 
 module.exports.selectById = async (req, res) => {
@@ -37,4 +38,23 @@ module.exports.create = async (req,res) => {
     console.log('ERROR-filmController-create:', err);
   }
   return res.status(responseObj.status).send(responseObj)
+}
+
+module.exports.update = async (req, res) => {
+  console.log(req.params.id, req.body)
+  const responseObj = { status: 500, message: 'Internal server error'};
+  try {
+    const film = req.body;
+    film.id = req.params.id;
+    const responseFromService = await filmService.update(film);
+    if (responseFromService.status) {
+      responseObj.body = responseFromService.result;
+      responseObj.message = 'User updated successfully';
+      responseObj.status = 200
+    }
+  } catch (err) {
+    responseObj.error = err;
+    console.log('ERROR-filmController-update', err);
+  }
+  return res.status(responseObj.status).send(responseObj);
 }

@@ -8,3 +8,7 @@ module.exports.selectFilmSchema = Joi.object({
 module.exports.createFilmSchema = Joi.object({
   title: Joi.string().alphanum().required(),
 })
+
+module.exports.updateFilmSchema = Joi.object({
+  title: Joi.string().alphanum().optional(),
+})

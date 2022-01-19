@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 const Film = require('../model/db/filmModel');
 const repository = require('../database/repository');
 const { response } = require('express');
+const { report } = require('../routes/filmRoutes');
 
 module.exports.selectById = async (filmId) => {
   const response = { status: false };
@@ -39,3 +40,26 @@ module.exports.create = async (dataFromController) => {
   }
   return responseObj;
 }
+
+module.exports.update = async (film) => {
+  const responseObj = { status: false };
+  try{
+    const data = {
+      findQuery: { _id:mongoose.Types.ObjectId(film.id) },
+      model: Film,
+      projection: { _v: false },
+      updateQuery: {}
+    }
+    if (film.title) data.updateQuery.title = film.title;
+    if (typeof film.id != 'undefined') data.updateQuery.id = film.id;
+    const responseFromRepro = await repository.findOneAndUpdate(data);
+    if(responseFromRepro.status) {
+      responseObj.result = responseFromRepro.result;
+      responseObj.status = true;
+    } 
+  } catch (err) {
+    responseObj.err = err;
+    console.log('ERROR-filmService-update', err)
+  }
+  return responseObj
+};
