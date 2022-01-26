@@ -7,37 +7,63 @@ module.exports.selectById = async (data) => {
       result: doc,
     };
   } catch (err) {
-    console.log('ERROR-repository-selectById: ', err)
+    console.log('ERROR-repository-selectById', err);
   }
   return response;
 }
 
-module.exports.save = async (objToSave) => {
-  let responseObj = { status: false };
+module.exports.selectAll = async (data) => {
+  let response = { status: false };
   try {
-    const doc = await objToSave.save();
-    responseObj = {
+    const doc = await data.model.find(data.findQuery, data.projection).skip(+data.findQuery.skip).limit(+data.findQuery.limit);
+    response = {
+      status: true,
       result: doc,
-      status: true
     };
   } catch (err) {
-    responseObj.error = err;
-    console.log('ERROR-reprository-save', err);
+    console.log('ERROR-repository-selectAll', err);
   }
-  return responseObj;
-};
+  return response;
+}
 
-module.exports.findOneAndUpdate = async (data) => {
-  let responseObj = { status: false };
+module.exports.create = async (obj) => {
+  let response = { status: false };
   try {
-    const doc = await data.model.findOneAndUpdate(data.findQuery, data.updateQuery, { projection: data.projection, new: true});
-    responseObj = {
+    const doc = await obj.save()
+    response = {
+      status: true,
       result: doc,
-      status: true
     };
   } catch (err) {
-    responseObj.error = err;
-    console.log('ERROR-crudRepository-findOneAndUpdate', err);
+    console.log('ERROR-repository-create', err);
   }
-  return responseObj;
-};
+  return response;
+}
+
+module.exports.update = async (data) => {
+  let response = { status: false };
+  try {
+    const doc = await data.model.findOneAndUpdate({_id: data._id}, data.updateQuery, {projection: data.projection, new: true});
+    response = {
+      status: true,
+      result: doc,
+    };
+  } catch (err) {
+    console.log('ERROR-repository-update', err);
+  }
+  return response;
+}
+
+module.exports.delete = async (data) => {
+  let response = { status: false };
+  try {
+    const doc = await data.model.findOneAndDelete({_id: data._id}, {projection: data.projection});
+    response = {
+      status: true,
+      result: doc,
+    };
+  } catch (err) {
+    console.log('EROR-repository-delete', err);
+  }
+  return response;
+}
