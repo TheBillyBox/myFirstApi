@@ -63,3 +63,26 @@ module.exports.update = async (film) => {
   }
   return responseObj
 };
+
+module.exports.delete = async (film) => {
+  const responseObj = { status: false };
+  try{
+    const data = {
+      findQuery: { _id:mongoose.Types.ObjectId(film.id) },
+      model: Film,
+      projection: { _v: false },
+      updateQuery: {}
+    }
+    if (film.title) data.updateQuery.title = film.title;
+    if (typeof film.id != 'undefined') data.updateQuery.id = film.id;
+    const responseFromRepro = await repository.findOneAndUpdate(data);
+    if(responseFromRepro.status) {
+      responseObj.result = responseFromRepro.result;
+      responseObj.status = true;
+    } 
+  } catch (err) {
+    responseObj.err = err;
+    console.log('ERROR-filmService-update', err)
+  }
+  return responseObj
+};

@@ -12,22 +12,35 @@ module.exports.selectById = async (data) => {
   return response;
 }
 
-module.exports.save = async (objToSave) => {
+module.exports.selecAll = async (data) => {
+  let response = { status: false }
+  try {
+    const doc = await data.model.find(data.findQuery, data.projection).skip(+data.findQuery.skip).limit(+data.findQuery.limit);
+    response = {
+      status: true,
+      result: doc,
+    };
+  } catch (err) {
+    console.log('ERROR-repository-selectAll', err)
+  }
+}
+
+module.exports.findOneAndUpdate = async (data) => {
   let responseObj = { status: false };
   try {
-    const doc = await objToSave.save();
+    const doc = await data.model.findOneAndUpdate(data.findQuery, data.updateQuery, { projection: data.projection, new: true});
     responseObj = {
       result: doc,
       status: true
     };
   } catch (err) {
     responseObj.error = err;
-    console.log('ERROR-reprository-save', err);
+    console.log('ERROR-crudRepository-findOneAndUpdate', err);
   }
   return responseObj;
 };
 
-module.exports.findOneAndUpdate = async (data) => {
+module.exports.findOneAndDelete = async (data) => {
   let responseObj = { status: false };
   try {
     const doc = await data.model.findOneAndUpdate(data.findQuery, data.updateQuery, { projection: data.projection, new: true});
