@@ -1,8 +1,10 @@
+const c = require('./../config/constants');
 const Joi = require('@hapi/joi');
 
 module.exports.validate = (schema, inputValidation) => {
   return (req, res, next) => {
-    let objToValidate;
+    let objToValidate = {};
+
     switch (inputValidation) {
       case 'body':
         objToValidate = req.body;
@@ -21,12 +23,8 @@ module.exports.validate = (schema, inputValidation) => {
     const result = schema.validate(objToValidate);
 
     if (result.error) {
-      // console.log(result.error);
-      const errorDetails = result.error.details.map((error) => error.message);
-      res.status(400).send({
-        title: 'ERROR input',
-        errorDetails
-      });
+      const errorDetails = result.error.details.map((el => el.message));
+      res.status(c.status.badRequest).send(errorDetails);
     } else {
       next();
     }
