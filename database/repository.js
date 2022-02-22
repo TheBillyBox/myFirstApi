@@ -67,3 +67,17 @@ module.exports.delete = async (data) => {
   }
   return response;
 }
+
+module.exports.findOne = async (data) => {
+  let response = { status: false };
+  try {
+    const doc = await data.model.findOne(data.findQuery);
+    response = {
+      status: true,
+      result: doc,
+    };
+  } catch(err) {
+    console.log('ERROR-repository-findOne: ', err);
+  }
+  return response;
+}

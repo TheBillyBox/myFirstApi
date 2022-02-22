@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-module.exports = mongoose.model('Film', mongoose.Schema({
+module.exports = mongoose.model('film', mongoose.Schema({
   title: String,
   sinopsis: String,
   director: String,

@@ -1,9 +1,11 @@
 const express = require('express');
-require('dotenv').config()
 const app = express();
-//*Mongoose
-const connect = require('./database/connect')
+require('dotenv').config();
+const connect = require('./database/connect');
+
 connect.createConnection();
+app.use(express.json()); 
+app.use(express.urlencoded({extended: true}));
 const myFirstController = require('./controllers/myFirstController')
 
 app.get('/', myFirstController.helloWorld)
@@ -11,6 +13,7 @@ app.get('/alumnes', myFirstController.alumnes)
 
 app.use('/api/v1/user', require('./routes/userRoutes'))
 app.use('/api/v1/film', require('./routes/filmRoutes'))
+app.use('/api/v1/auth', require('./routes/authRoutes'))
 app.listen(process.env.PORT || 3000, () =>{
     console.log('My Frist API running!')
 })
