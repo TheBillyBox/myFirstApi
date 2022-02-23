@@ -7,7 +7,6 @@ module.exports.login = async (req, res) => {
   try {
 
     const user = req.body;
-    console.log(req.body);
     const resFromService = await authService.login(user);
     if (resFromService.status) {
       if (resFromService.result) {
